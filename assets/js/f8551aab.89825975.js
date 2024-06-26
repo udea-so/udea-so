@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkudea_so=self.webpackChunkudea_so||[]).push([[2224],{7641:(e,s,a)=>{a.r(s),a.d(s,{default:()=>h});a(6540);var c=a(3844),u=a(4848);function h(){return(0,u.jsxs)(c.A,{children:[(0,u.jsx)("h1",{children:"My React page"}),(0,u.jsx)("p",{children:"This is a React page"})]})}}}]);
