@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://udea-so.github.io/udea-so/blog</id>
-    <title>Sistemas Operativos - UdeA Blog</title>
+    <title>Sistemas Operativos Blog</title>
     <updated>2021-08-26T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://udea-so.github.io/udea-so/blog"/>
-    <subtitle>Sistemas Operativos - UdeA Blog</subtitle>
+    <subtitle>Sistemas Operativos Blog</subtitle>
     <icon>https://udea-so.github.io/udea-so/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
