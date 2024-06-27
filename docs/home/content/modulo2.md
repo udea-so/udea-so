@@ -4,6 +4,7 @@ sidebar_position: 2
 
 # Módulo 2: Virtualización de Memoria
 
+
 ## 1. Virtualización de Memoria y paginación
 
 Ya hemos explorado cómo hace el Sistema Operativo para gestionar la CPU. Ahora vamos a tratar otro de los principales elementos del sistema de cómputo: la memoria principal.
