@@ -3,7 +3,9 @@ sidebar_position: 2
 ---
 
 
-# Temario
+# Calendario resumido
+
+La siguiente tabla muestra el contenido resumido del curso:
 
 <table><thead>
 

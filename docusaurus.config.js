@@ -43,16 +43,12 @@ const config = {
         docs: {
           sidebarPath: "./sidebars.js",
           // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          // Remove this to remove the "edit this page" links
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -73,11 +69,23 @@ const config = {
           src: "img/logo.svg",
         },
         items: [
+          //{
+          //  type: "docSidebar",
+          //  sidebarId: "tutorialSidebar",
+          //  position: "left",
+          //  label: "Tutorial",
+          //},
           {
             type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            sidebarId: "teoriaSidebar",
             position: "left",
-            label: "Tutorial",
+            label: "Teoria",
+          },
+          {
+            type: "docSidebar",
+            sidebarId: "laboratorioSidebar",
+            position: "left",
+            label: "Laboratorio",
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
