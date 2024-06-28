@@ -18,7 +18,7 @@ const sidebars = {
 
   // But you can create a sidebar manually
   teoriaSidebar: [
-    'intro',
+    // 'intro',
     'teoria/intro-teoria',
     'teoria/temario',
     {

@@ -10,7 +10,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 const config = {
   title: "Sistemas Operativos",
   tagline: "Universidad de Antioquia",
-  favicon: "img/favicon.ico",
+  favicon: "img/Tux.svg",
 
   // Set the production url of your site here
   url: "https://udea-so.github.io/",
@@ -66,7 +66,7 @@ const config = {
         title: "Curso de Sistemas Operativos",
         logo: {
           alt: "My Site Logo",
-          src: "img/logo.svg",
+          src: "img/Tux.svg",
         },
         items: [
           //{
