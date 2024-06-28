@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkudea_so=self.webpackChunkudea_so||[]).push([[1903],{1912:e=>{e.exports=JSON.parse('{"blogBasePath":"/udea-so/blog","blogTitle":"Blog"}')}}]);
