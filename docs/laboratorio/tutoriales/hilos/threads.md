@@ -16,11 +16,14 @@ import Image from '@theme/IdealImage';
 
 ## 1. Motivación
 
-:::info[Sobre los hilos]
+:::note[Sobre los hilos]
 "What happened to the prejudice of two years ago, which was that the parallel programming is difficult? It turns out that what was difficult, and almost impossible, is to take an ordinary program and automatically figure out how to use the parallel computation effectively on that program. Instead, one must start all over again with the problem, appreciating that we have the possibility of parallel calculation, and rewrite the program completely with a new [understanding of] what is inside the machine. It is not possible to effectively use the old programs. They must be rewritten. That is a great disadvantage to most industrial applications and has met with considerable resistance. But the big programs usually belong to scientists or other, unofficial, intelligent programmers who love computer science and are willing to start all over again and rewrite the program if they can make it more efficient. So what’s going to happen is that the hard programs, vast big ones, will be the first to be re-programmed by experts in the new way, and then gradually everybody will have to come around, and more and more programs will be programmed that way, and programmers will just have to learn how to do it".
 
 <p align = 'center'>
+<figure>
 ![portada](/img/labs/tutoriales/hilos/The_pleasure_of_finding_things_out.jpg)
+<figcaption>**Fig 1**. The pleasure of finding things out</figcaption>
+</figure>
 </p>
 
 
@@ -36,23 +39,64 @@ Cada sistema operativo tiene, generalmente, una forma diferente de implementar l
 
 ## 3. Trabajando con la libreria pthread
 
-Compile los siguientes ejercicios, analice el código y la salida. Para la compilar el código con la librería pthread es necesario notificarle al compilador el uso de la librería pthread, mediante la  opción –lpthread, como se muestra este ejemplo:
+Para crear aplicaciones multihilo el linux, se emplea la libreria `pthread` (POSIX threads). Esta biblioteca permite la creación y gestión de hilos de ejecución (threads), los cuales pueden ejecutarse de manera concurrente dentro un proceso. 
+
+Para que un programa pueda usar la interfaz de programación para hilos, lo promero que se debe realizar es incluisr la libreria `pthread` en el código:
+
+```c
+#include <pthread.h>
+```
+
+Luego, despues de codificar el programa, se procede a compilar el programa enlazando la biblioteca  `pthread` mediante la opción `–lpthread` en el comando ejecutado con el `gcc`:
 
 ```
 gcc codigo.c –o ejecutable -lpthread 
 ```
 
+En las siguientes secciones, nos centraremos en las diferentes funciones del API `pthread` empleadas para codificar programas multihilo.
+
 ### 3.1. Creación de un hilo
 
-Para la creación de un hilo se emplea la función **`pthread_create`** cuya descripción se encuentra con más detalle en el apéndice de la guía. Respecto al caso de los procesos existe una similitud (obviamente sin olvidar los detalles y aspectos conceptuales de fondo) entre las funciones **`pthread_create`** y **`fork`** tal y como se muestra en el siguiente gráfico:
+Para la creación de un hilo se emplea la función **`pthread_create`** cuya descripción se muestra a continuación:
 
+:::info[pthread_create]
+
+**Sintaxis**
+
+`pthread_create` crea y ejecuta un nuevo hilo. Esta rutina puede ser llamada cualquier número de veces desde cualquier parte del codigo.
+
+```c
+int pthread_create(
+                    pthread_t * thread,                /* in - out */
+                    const pthread_attr_t * attr,       /* in */
+                    void *(* start_routine )(void *),  /* in */
+                    void * arg                         /* in */ 
+                   );
+```
+
+**Parámetros de la función**:
+* **`thread`**: Es un apuntador (por ende debe ser previamente inicializado) en el cual se almacena el ID del thread recién creado.
+* **`attr`**: Apuntador usado para asignar atributos al hilo. Si se asigna `NULL`, los atributos con los que se inicializará el hilo serán los atributos por defecto.
+* **`start_routine`**: Es la rutina (función) que el hilo ejecutará una vez que es creado. `void*` y aceptar un argumento de tipo `void*`.
+* **`arg`**: Argumento que se pasa a la `start_routine`. Este deberá ser pasado por referencia haciendo un casting a un apuntador tipo `void`. Sí se emplea `NULL` significa que ningún argumento será pasado.
+
+**Retorna**:
+* **`0`**: Si la creación del hilo exitosa.
+* **`Número positivo`**: En caso de error.
+
+:::
+
+Respecto al caso de los procesos existe una similitud (obviamente sin olvidar los detalles y aspectos conceptuales de fondo) entre las funciones **`pthread_create`** y **`fork`** tal y como se muestra en el siguiente gráfico (tomado de la pagina **POSIX Threads API** ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))):
 
 <!--
 <Image img={require('/img/labs/tutoriales/hilos/threads_tut_fig1.png')} />
 -->
 
 <p align = 'center'>
+<figure>
 ![comparacion](/img/labs/tutoriales/hilos/forkjoin.gif)
+<figcaption>**Fig 2**. Similitudes proceso e hilo</figcaption>
+</figure>
 </p>
 
 A continuación se muestra un código ejemplo.
@@ -108,15 +152,17 @@ Para finalizar la ejecución del programa emplee la combinación de teclas `<Ctr
 Tal y como en secciones previas del curso, al igual que en los procesos es posible crear varios hilos pues la función `pthread_create` puede ser llamada tantas veces como se desee dentro del código (en el cual se encuentra el hilo principal). La siguiente gráfica aclara esto: 
 
 <p align = 'center'>
-![comparacion](/img/labs/tutoriales/hilos/nojoin.gif)
+<figure>
+![nojoin](/img/labs/tutoriales/hilos/nojoin.gif)
+<figcaption>**Fig 3**. Creación de varios hilos ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))</figcaption>
+</figure>
 </p>
 
-El siguiente ejemplo muestra este caso.
+El siguiente ejemplo ilustra esta situación.
 
 #### Ejemplo 2
 
 En el siguiente ejemplo ([lab4_p1_example2.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example2.c)) se crean dos hilos a partir de un hilo principal.
-
 
 ```c {12-18,23-32,46,51} showLineNumbers
 /***********************************************************************
@@ -184,7 +230,42 @@ int main ()
 
 ### 3.3. Conectando hilos (Join)
 
-Cuando un hilo, después de haber creado un hilo previamente invoca la función `pthread_join` esperará a que el hilo creado (hijo) culmine su tarea antes de proseguir, esta función es bastante similar a la función `waitpid` empleada para los procesos tal y como se muestra en la figura 1.
+Recordemos que la función `pthread_create` permitia que un hilo (el cual llamaremos padre) creara y ejecutara otro hilo (el cual llamaremos hijo).
+
+Tal y como se mostro en la sección anterior, una vez creados los hilos cada uno empieza a ejecutarse de manera independiente. Sin embargo a veces puede ser util que el hilo padre, antes de proseguir su ejecución, espere a que el hilo hijo termine hijo (pues depronto puede necesitar resultados del hilo hijo). Para hacer que el hilo padre espere al hilo hijo, se emplea la función `pthread_join` (de manera bastante similar al caso de la función `waitpid` para usada para los procesos). La siguiente figura ilustra esto:
+
+<p align = 'center'>
+<figure>
+![nojoin](/img/labs/tutoriales/hilos/join.gif)
+<figcaption>**Fig 3**. Conectando hilos ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))</figcaption>
+</figure>
+</p>
+
+A continuación se describe la función `pthread_join`
+
+:::info[pthread_join]
+
+**Sintaxis**
+
+La función `pthread_join` es usada para poner al hilo que la invoca (hilo padre) a esperar hasta que el hilo hijo se termine su ejecución.
+
+```c
+include <pthread.h>
+
+int pthread_join(
+                 pthread_t thread ,            /* in */
+                 void ** retval                /* in - out */
+                );
+```
+
+**Parámetros de la función**:
+* **`thread`**: Objeto tipo `pthread_t` asociado con el hilo hijo.
+* **`retval`**: Parámetro a una variable usada para almacenar el valor de retorno del hilo. Este se usa comúnmente para almacenar el valor retornado por la función llamada en el `pthread_create` o puede ser puesto en `NULL` si no se necesita capturar el valor de retorno.
+
+**Retorna**:
+* **`0`**: Si la creación del hilo exitosa.
+* **`Número positivo`**: En caso de error.
+:::
 
 #### Ejemplo 3 
 
@@ -210,7 +291,7 @@ pthread_join (thread2_id, NULL);
 **Preguntas**
 
 1. ¿Qué sucede ahora con la ejecución de este código? ¿Por qué?
-2. ¿Cuál es la funcionalidad de hacer un join en los hilos?3
+2. ¿Cuál es la funcionalidad de hacer un join en los hilos?
 3. ¿Cuáles son los parámetros de la función pthread_join? ¿Cuál es su uso?
 
 ### 3.4. PID e hilos
