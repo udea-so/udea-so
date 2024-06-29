@@ -18,7 +18,6 @@ const sidebars = {
 
   // But you can create a sidebar manually
   teoriaSidebar: [
-    // 'intro',
     'teoria/intro-teoria',
     'teoria/temario',
     {
@@ -47,7 +46,22 @@ const sidebars = {
       items: [
         'laboratorio/recursos/intro',
       ]
-    }
+    },
+    {
+      type: 'category',
+      label: 'Tutoriales',
+      items: [
+        'laboratorio/tutoriales/intro',
+        {
+          type: 'category',
+          label: 'Hilos y sincronización',
+          items: [
+            'laboratorio/tutoriales/hilos/threads',
+            'laboratorio/tutoriales/hilos/sincronizacion',
+          ]
+        },               
+      ]
+    },
   ],
   
   /*

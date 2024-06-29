@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 sidebar_label: Sobre la teoria
+description: Esta pagina resume la parte teorica del curso
 ---
 
 # Sistemas Operativos - Teoria
