@@ -6,6 +6,14 @@ description: Tutorial sobre hilos
 
 import Image from '@theme/IdealImage';
 
+export const Highlight = ({ text, backgroundColor }) => {
+  const style = {
+    backgroundColor: backgroundColor || 'yellow', // Default color is yellow if not provided
+  };
+  return <span style={style}>{text}</span>;
+};
+
+
 # Threads (hilos)
 
 
@@ -17,7 +25,7 @@ import Image from '@theme/IdealImage';
 ## 1. Motivación
 
 :::note[Sobre los hilos]
-"What happened to the prejudice of two years ago, which was that the parallel programming is difficult? It turns out that what was difficult, and almost impossible, is to take an ordinary program and automatically figure out how to use the parallel computation effectively on that program. Instead, one must start all over again with the problem, appreciating that we have the possibility of parallel calculation, and rewrite the program completely with a new [understanding of] what is inside the machine. It is not possible to effectively use the old programs. They must be rewritten. That is a great disadvantage to most industrial applications and has met with considerable resistance. But the big programs usually belong to scientists or other, unofficial, intelligent programmers who love computer science and are willing to start all over again and rewrite the program if they can make it more efficient. So what’s going to happen is that the hard programs, vast big ones, will be the first to be re-programmed by experts in the new way, and then gradually everybody will have to come around, and more and more programs will be programmed that way, and programmers will just have to learn how to do it".
+"What happened to the prejudice of two years ago, which was that the parallel programming is difficult? It turns out that what was difficult, and almost impossible, is to take an ordinary program and automatically figure out how to use the parallel computation effectively on that program. <Highlight text="Instead, one must start all over again with the problem, appreciating that we have the possibility of parallel calculation, and rewrite the program completely with a new [understanding of] what is inside the machine. It is not possible to effectively use the old programs. They must be rewritten" backgroundColor="#FFE9D0"/>. That is a great disadvantage to most industrial applications and has met with considerable resistance. But the big programs usually belong to scientists or other, unofficial, intelligent programmers who love computer science and are willing to start all over again and rewrite the program if they can make it more efficient. <Highlight text="So what’s going to happen is that the hard programs, vast big ones, will be the first to be re-programmed by experts in the new way, and then gradually everybody will have to come around, and more and more programs will be programmed that way, and programmers will just have to learn how to do it" backgroundColor="#BBE9FF"/>.
 
 <p align = 'center'>
 <figure>
@@ -103,7 +111,7 @@ A continuación se muestra un código ejemplo.
 
 #### Ejemplo 1
 
-El siguiente código ([lab4_p1_example1.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example1.c)) emplea la función `pthread_create` para mostrar la creación de hilos.
+El siguiente código ([lab4_p1_example1.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example1.c)) emplea la función `pthread_create` para mostrar la creación de hilos.
 
 ``` c {26} showLineNumbers
 /***********************************************************************
@@ -162,7 +170,7 @@ El siguiente ejemplo ilustra esta situación.
 
 #### Ejemplo 2
 
-En el siguiente ejemplo ([lab4_p1_example2.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example2.c)) se crean dos hilos a partir de un hilo principal.
+En el siguiente ejemplo ([lab4_p1_example2.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example2.c)) se crean dos hilos a partir de un hilo principal.
 
 ```c {12-18,23-32,46,51} showLineNumbers
 /***********************************************************************
@@ -237,7 +245,7 @@ Tal y como se mostro en la sección anterior, una vez creados los hilos cada uno
 <p align = 'center'>
 <figure>
 ![nojoin](/img/labs/tutoriales/hilos/join.gif)
-<figcaption>**Fig 3**. Conectando hilos ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))</figcaption>
+<figcaption>**Fig 4**. Conectando hilos ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))</figcaption>
 </figure>
 </p>
 
@@ -269,7 +277,7 @@ int pthread_join(
 
 #### Ejemplo 3 
 
-En el siguiente ejemplo ([lab4_p1_example3.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example3.c)) se ilustra el uso de la función `pthread_join`.  Dado el siguiente código:
+En el siguiente ejemplo ([lab4_p1_example3.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example3.c)) se ilustra el uso de la función `pthread_join`.  Dado el siguiente código:
 
 ```c 
 ...
@@ -300,7 +308,7 @@ Recordemos que todo proceso se caracteriza por tener un PID asociado, pero ¿Qu�
 
 #### Ejemplo 4
 
-PID e hilos ([lab4_p1_example4.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example4.c))
+PID e hilos ([lab4_p1_example4.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example4.c))
 
 ```c showLineNumbers
 /***********************************************************************
@@ -338,11 +346,12 @@ Tal y como hemos visto a lo largo de la guia un solo proceso puede contener múl
 * **Parte 1**: Esta contiene los recursos usados por el programa completo tales como las instrucciones del programa y los datos globales. 
 * **Parte 2**: Información relacionada con el estado de ejecución, tal como el program counter y el stack. Esta parte es la que se refiere al hilo propiamente.
 
-
 <p align = 'center'>
-![comparacion](/img/labs/tutoriales/hilos/mem_and_threads.png)
+<figure>
+![nojoin](/img/labs/tutoriales/hilos/mem_and_threads.png)
+<figcaption>**Fig 5**. Mapa de memoria de un proceso con varios hilos de ejecución ([link](https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html))</figcaption>
+</figure>
 </p>
-
 
 Lo anterior hace importante distinguir en el momento de paralelizar a nivel de código que será individual (asociado a cada hilo únicamente) y que será compartido (asociado a todos los hilos). La siguiente tabla muestra esto: 
 
@@ -354,7 +363,7 @@ En el siguiente ejemplo sencillo se muestran las implicaciones de lo que se menc
 
 #### Ejemplo 5
 
-Compartiendo variables entre hilos ([lab4_p1_example5.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example5.c)). 
+Compartiendo variables entre hilos ([lab4_p1_example5.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example5.c)). 
 
 ```c showLineNumbers
 #include <stdio.h>
@@ -403,7 +412,7 @@ Cuando el segundo argumento que se pasa a `pthread_join` no es nulo, el valor de
 
 #### Ejemplo 6
 
-En el siguiente ejemplo ([lab4_p1_example6.c](/code/labs/tutoriales/hilos/parte1/lab4_p1_example6.c)) se muestra el código:
+En el siguiente ejemplo ([lab4_p1_example6.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/lab4_p1_example6.c)) se muestra el código:
 
 ```c showLineNumbers
 #include <pthread.h>
@@ -463,7 +472,9 @@ void* calcular_primo (void* arg){
 
 ## 4. Ejemplos de refuerzo
 
-1. El siguiente ejemplo ([simple.c](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple.c)) muestra un programa que ejecuta 3 tareas empleando un solo hilo.  
+Los siguientes ejemplos son tomados del cápitulo 1 (**Chapter 1. Why Threads?** ([link](https://www.oreilly.com/library/view/pthreads-programming/9781449364724/ch01.html))) del libro **PThreads Programming**.
+
+1. El siguiente ejemplo ([simple.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple.c)) muestra un programa que ejecuta 3 tareas empleando un solo hilo.  
    
    ```c showLineNumbers
    #include <stdio.h>
@@ -533,10 +544,14 @@ void* calcular_primo (void* arg){
    Nótese que cada una de las tareas se hace de manera secuencial. La siguiente tarea resalta este caso esto en el mapa de memoria asociado al proceso (de esta aplicación) que ejecuta un solo hilo.
 
    <p align = 'center'>
-   ![comparacion](/img/labs/tutoriales/hilos/ref_example1.jpg)
+   <figure>
+   ![example1](/img/labs/tutoriales/hilos/ref_example1.jpg)
+   <figcaption>**Fig 6**. Programa simple como proceso con un hilo([link](https://www.oreilly.com/library/view/pthreads-programming/9781449364724/ch01.html))</figcaption>
+   </figure>
    </p>
 
-2. El siguiente ejemplo ([simple_threads.c](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple_threads.c)) ejecuta las mismas 3 tareas, sin embargo, mediante el uso de hilos el código es paralelizado mediante la creación de dos hilos (para un total de tres hilos con el principal). Para el caso, los hilos hijos ejecutan 2 de las 3 tareas mientras que el hilo padre ejecuta la otra tarea.
+
+2. El siguiente ejemplo ([simple_threads.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple_threads.c)) ejecuta las mismas 3 tareas, sin embargo, mediante el uso de hilos el código es paralelizado mediante la creación de dos hilos (para un total de tres hilos con el principal). Para el caso, los hilos hijos ejecutan 2 de las 3 tareas mientras que el hilo padre ejecuta la otra tarea.
    
    ```c showLineNumbers
    #include <stdio.h>
@@ -624,10 +639,13 @@ void* calcular_primo (void* arg){
    Nótese que a diferencia del ejemplo 1, cada uno de los hilos hijos tiene su propio contexto, sin embargo hay otras cosas que se comparten como las instrucciones asociadas a codigo (text), las variables globales (Data) y el heap entre otros.
 
    <p align = 'center'>
-   ![comparacion](/img/labs/tutoriales/hilos/ref_example2.jpg)
+   <figure>
+   ![example2](/img/labs/tutoriales/hilos/ref_example2.jpg)
+   <figcaption>**Fig 7**. Programa simple como proceso con dos hilos ([link](https://www.oreilly.com/library/view/pthreads-programming/9781449364724/ch01.html))</figcaption>
+   </figure>
    </p>
 
-3. El siguiente ejemplo ([simple_process.c](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple_process.c)) presenta la misma salida de los dos ejemplos anteriores pero para el caso, la solución se hace empleando procesos. Note que el comportamiento es similar que el ejemplo anterior, sin embargo el desarrollo de las tareas no es llevada a cabo por hilos sino por procesos.
+3. El siguiente ejemplo ([simple_process.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/simple_process.c)) presenta la misma salida de los dos ejemplos anteriores pero para el caso, la solución se hace empleando procesos. Note que el comportamiento es similar que el ejemplo anterior, sin embargo el desarrollo de las tareas no es llevada a cabo por hilos sino por procesos.
    
    ```c showLineNumbers
    #include <stdlib.h>
@@ -734,10 +752,13 @@ void* calcular_primo (void* arg){
    Nótese que una vez se lleva a cabo el `fork`, se crea un nuevo proceso completamente independiente con su propio espacio de memoria virtual y con las variables completamente independientes entre sí (y por ende no compartidas). Esta es la principal diferencia con el caso de los hilos.
 
    <p align = 'center'>
-   ![comparacion](/img/labs/tutoriales/hilos/ref_example3b.jpg)
+   <figure>
+   ![example2](/img/labs/tutoriales/hilos/ref_example3b.jpg)
+   <figcaption>**Fig 8**. Programa antes y despues del `fork` ([link](https://www.oreilly.com/library/view/pthreads-programming/9781449364724/ch01.html))</figcaption>
+   </figure>
    </p>
 
-4. El siguiente ejemplo ([thread_file.c](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/thread_file.c)) tomado de la página **PTHREAD TUTORIAL – SIMPLIFIED** ([link](https://vcansimplify.wordpress.com/2013/03/08/pthread-tutorial-simplified/)) muestra un ejemplo en el cual un hilo hace tareas relacionadas con manejo de archivos. Entenderlo puede ser de utilidad para el desarrollo de la práctica de laboratorio.
+4. El siguiente ejemplo ([thread_file.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/thread_file.c)) tomado de la página **PTHREAD TUTORIAL – SIMPLIFIED** ([link](https://vcansimplify.wordpress.com/2013/03/08/pthread-tutorial-simplified/)) muestra un ejemplo en el cual un hilo hace tareas relacionadas con manejo de archivos. Entenderlo puede ser de utilidad para el desarrollo de la práctica de laboratorio.
 
    ```c showLineNumbers
    /*
@@ -785,7 +806,10 @@ void* calcular_primo (void* arg){
    Para este caso en particular, la siguiente figura muestra el resultado al multiplicar la `i-ésima` fila de la matrix `A` por el vector `x` para obtener el `i-ésimo` elemento del vector resultante `y`.
 
    <p align = 'center'>
-   ![comparacion](/img/labs/tutoriales/hilos/ref_example5a.png)
+   <figure>
+   ![mat_mult](/img/labs/tutoriales/hilos/ref_example5a.png)
+   <figcaption>**Fig 9**. Multiplicación de una matriz por un vector</figcaption>
+   </figure>
    </p>
 
    * **Solución secuencial**
@@ -810,7 +834,7 @@ void* calcular_primo (void* arg){
      }
      ```
 
-     En [`mat_vect_mult.c`](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/mat_vect_mult.c) se encuentra el código solución. Inicialmente vamos a realizar un caso de test en un shell online de python. Para ello introduzca los siguientes comandos:
+     En [`mat_vect_mult.c`](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/mat_vect_mult.c) se encuentra el código solución. Inicialmente vamos a realizar un caso de test en un shell online de python. Para ello introduzca los siguientes comandos:
 
      ```py
      >>> import numpy as np
@@ -865,35 +889,47 @@ void* calcular_primo (void* arg){
      3. ¿Qué hará el hilo? el cual plantea el desarrollo de la parte algorítmica.
 
      <p align = 'center'>
-     ![comparacion](/img/labs/tutoriales/hilos/ref_example5b.png)
+     <figure>
+     ![mat_mult](/img/labs/tutoriales/hilos/ref_example5b.png)
+     <figcaption>**Fig 10**. Proceso de multiplicación de una matriz por un vector</figcaption>
+     </figure>
      </p>
 
      Para este problema particular de la matrix el tratamiento de estas preguntas se resume a continuación:
-     1. **¿Como se puede paralelizar el problema?** Teniendo en cuenta que cada componente del vector respuesta es la multiplicación de una fila de la matrix por el vector de entrada y que el cálculo de un componente no necesita esperar el cálculo de otro, el problema se presta para que la matrix se divida en varias submatrices a la entrada las cuales aportaran algunos de los componentes del resultado general de modo que cada hilo de los creados será el responsable de una submatrix.
-     2. **¿Que necesita el hilo?** 
+     4. **¿Como se puede paralelizar el problema?** Teniendo en cuenta que cada componente del vector respuesta es la multiplicación de una fila de la matrix por el vector de entrada y que el cálculo de un componente no necesita esperar el cálculo de otro, el problema se presta para que la matrix se divida en varias submatrices a la entrada las cuales aportaran algunos de los componentes del resultado general de modo que cada hilo de los creados será el responsable de una submatrix.
+     5. **¿Que necesita el hilo?** 
         1. **Elementos involucrados de manera general**: Matrix `A`, vector de entrada `x` y vector de salida `y`. 
         2. **Entradas a cada hilo**: Cada submatrix (definida por los índices final e inicial de cada fila involucrada en el calculo), el vector de entrada `x`. Estas se manejarán como variables globales.
         3. **Salidas de cada hilo**: Componentes resultantes de la multiplicación de cada submatrix por el vector de entrada, también se maneja como variable global.
-     3. **¿Qué hará el hilo?**
+     6. **¿Qué hará el hilo?**
         1. Aca va el código del algoritmo, este será asociado a la función start asociada que se corre cuando se crea e hilo.
         2. **Restricciones**: El número de elementos del vector resultante debe ser múltiplo del número de hilos que la salida sea válida.
  
      La siguiente figura muestra una descripción de la solución del problema cuando se usan 3 hilos:
 
      <p align = 'center'>
-     ![comparacion](/img/labs/tutoriales/hilos/ref_example5c.png)
+     <figure>
+     ![mat_mult](/img/labs/tutoriales/hilos/ref_example5c.png)
+     <figcaption>**Fig 11**. Descripción del proceso de multiplicación de una matriz por un vector usando 3 hilos</figcaption>
+     </figure>
      </p>
 
      Nótese bien los componentes involucrados por hilo, la siguiente figura compara los casos con 2 y 3 hilos:
 
      <p align = 'center'>
-     ![comparacion](/img/labs/tutoriales/hilos/ref_example5d.png)
+     <figure>
+     ![mat_mult](/img/labs/tutoriales/hilos/ref_example5d.png)
+     <figcaption>**Fig 12**. Comparación de la multiplicación de una matriz por un vector para los casos de 2 y 3 hilos</figcaption>
+     </figure>
      </p>
 
      Nótese que el número de componentes cambia. Finalmente el caso genérico y a partir del cual se definirá el pseudocódigo del algoritmo de la función de start será el siguiente:
 
      <p align = 'center'>
-     ![comparacion](/img/labs/tutoriales/hilos/ref_example5e.png)
+     <figure>
+     ![mat_mult](/img/labs/tutoriales/hilos/ref_example5e.png)
+     <figcaption>**Fig 13**. Caso general de la multiplicación de una matriz por un vector usando N hilos</figcaption>
+     </figure>
      </p>
 
      El código asociado se muestra a continuación: 
@@ -926,7 +962,7 @@ void* calcular_primo (void* arg){
      } /* Pth_mat_vect */     
      ```
 
-     El archivo [pth_mat_vect.c](/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/pth_mat_vect.c) contiene el código solución proporcionado por Pacheco. Ejecute el programa con las mismas entradas del caso de uso anterior de la siguiente manera:
+     El archivo [pth_mat_vect.c](https://github.com/udea-so/udea-so/blob/main/static/code/labs/tutoriales/hilos/parte1/ejemplos_de_refuerzo/pth_mat_vect.c) contiene el código solución proporcionado por Pacheco. Ejecute el programa con las mismas entradas del caso de uso anterior de la siguiente manera:
 
      ```c
      #include <stdio.h>
@@ -1014,7 +1050,13 @@ void* calcular_primo (void* arg){
      ...
      ```
      
-     Cabe anotar tal y como lo dice el autor, el manejo de variables globales en el problema anterior no es buena idea. Una forma alternativa sería emplear alguna estructura como entrada a la función de start del hilo. Lo animamos a que lo intente (Para ello puede basarse en el ejemplo 2 de la sección 2.2 de la guia).
+     Cabe anotar tal y como lo dice el autor, el manejo de variables globales en el problema anterior no es buena idea. Una forma alternativa sería emplear alguna estructura como entrada a la función de start del hilo. Lo animamos a que lo intente (Para ello puede basarse en el **ejemplo 2** ([link](#ejemplo-2)) de la guia).
+
+     |Número de hilos|Salida|
+     |----|----|
+     |1||
+     |2||
+     |3||
 
 ## 5. Recomendaciones
 
@@ -1026,9 +1068,45 @@ Cuando trabaje con hilos tener en cuenta las siguientes claves puede sacarlo de 
 
 ## 7. Ejercicios propuestos
 
-En construcción...
+1. Analice, entienda y pruebe los siguientes dos códigos en los que se paraleliza la multiplicación de matrices:
+   * **Código 1**: [Enlace](https://github.com/imsure/parallel-programming/blob/master/matrix-multiplication/matrix-mul-pthread.c)
+   * **Código 2**: [Enlace](https://github.com/koswesley/Pthread-Matrix-Multiplication)
 
-## 6. Referencias
+2. Se requiere un programa que reciba un vector de números a través de un archivo de texto. La idea es que el programa sume todos los números del vector. Implemente el programa de dos maneras, la primera de una forma estrictamente secuencial. La segunda forma es creando dos hilos, de manera que cada uno de ellos realice la sumatoria de la mitad de los componentes del vector. El hilo 1 sumará los primeros datos del vector y el hilo 2 los últimos. Luego cuando los dos hilos finalicen muestre en pantalla el resultado.
+   1. Realice el programa de manera genérica, de tal forma que sea posible ingresar vectores de cualquier tamaño.
+   2. Mida el tiempo de ejecución de ambas implementaciones para varios tamaños del vector. 
+   3. ¿El resultado obtenido es acorde a lo que usted esperaba?
+   4. Describa la técnica que usó para realizar la medición del tiempo. ¿Cuáles son las debilidades de esta técnica? ¿Existe otra forma de medir el tiempo de ejecución de un programa?
+
+3. **Medida de Dispersión**: el profesor de un curso desea un programa en lenguaje C que calcule la desviación estándar (símbolo **$\sigma$** o **$s$**) de las notas obtenidas por sus estudiantes en el curso.
+   
+   $$
+   \overline{x}=\frac{1}{N}\sum_{i=1}^{N}x_{i}
+   $$
+
+   $$
+   \sigma=\sqrt{\frac{1}{N-1}\sum_{i=1}^{N}(x_{i}-\overline{x})^2}
+   $$
+
+   **Requisitos**:
+  1. El número de notas es variable (se debe usar memoria dinámica).
+  2. El programa debe crear tantos hilos como se especifique en el parámetro de entrada `cantidad_hilos`, se debe ejecutar así: 
+     
+     ```
+     $./nombre_ejecutable fichero_notas.csv cantidad_hilos
+     ```
+
+   3. Se debe calcular la desviación estándar, implemente la función:
+       
+      ```
+      calculate_standard_deviation()
+      ``` 
+
+## 8. Anexo - Resumen de algunas funciones
+
+To do...
+
+## 9. Referencias
 
 * https://sourcerytools.github.io/advancedlinuxprogramming/
 * https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html
