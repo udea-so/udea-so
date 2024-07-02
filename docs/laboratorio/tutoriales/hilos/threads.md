@@ -25,7 +25,7 @@ export const Highlight = ({ text, backgroundColor }) => {
 ## 1. Motivación
 
 :::note[Sobre los hilos]
-"What happened to the prejudice of two years ago, which was that the parallel programming is difficult? It turns out that what was difficult, and almost impossible, is to take an ordinary program and automatically figure out how to use the parallel computation effectively on that program. <Highlight text="Instead, one must start all over again with the problem, appreciating that we have the possibility of parallel calculation, and rewrite the program completely with a new [understanding of] what is inside the machine. It is not possible to effectively use the old programs. They must be rewritten" backgroundColor="#FFE9D0"/>. That is a great disadvantage to most industrial applications and has met with considerable resistance. But the big programs usually belong to scientists or other, unofficial, intelligent programmers who love computer science and are willing to start all over again and rewrite the program if they can make it more efficient. <Highlight text="So what’s going to happen is that the hard programs, vast big ones, will be the first to be re-programmed by experts in the new way, and then gradually everybody will have to come around, and more and more programs will be programmed that way, and programmers will just have to learn how to do it" backgroundColor="#BBE9FF"/>.
+"What happened to the prejudice of two years ago, which was that the parallel programming is difficult? It turns out that what was difficult, and almost impossible, is to take an ordinary program and automatically figure out how to use the parallel computation effectively on that program. <Highlight text="Instead, one must start all over again with the problem, appreciating that we have the possibility of parallel calculation, and rewrite the program completely with a new [understanding of] what is inside the machine. It is not possible to effectively use the old programs. They must be rewritten" backgroundColor="#FFE9D0"/>. That is a great disadvantage to most industrial applications and has met with considerable resistance. But the big programs usually belong to scientists or other, unofficial, intelligent programmers who love computer science and are willing to start all over again and rewrite the program if they can make it more efficient. <Highlight text="So what’s going to happen is that the hard programs, vast big ones, will be the first to be re-programmed by experts in the new way, and then gradually everybody will have to come around, and more and more programs will be programmed that way, and programmers will just have to learn how to do it" backgroundColor="#BBE9FF"/>".
 
 <p align = 'center'>
 <figure>
@@ -1066,7 +1066,7 @@ Cuando trabaje con hilos tener en cuenta las siguientes claves puede sacarlo de 
 2. Cuando se emplean hilos en la solución de problemas, el empleo de variables globales puede introducir bugs confusos y sutiles por lo tanto se recomienda su uso sólo a situaciones en las cuales son realmente necesarias, por ejemplo cuando se hace necesario el uso de variables compartidas.
 :::
 
-## 7. Ejercicios propuestos
+## 6. Ejercicios propuestos
 
 1. Analice, entienda y pruebe los siguientes dos códigos en los que se paraleliza la multiplicación de matrices:
    * **Código 1**: [Enlace](https://github.com/imsure/parallel-programming/blob/master/matrix-multiplication/matrix-mul-pthread.c)
@@ -1102,12 +1102,13 @@ Cuando trabaje con hilos tener en cuenta las siguientes claves puede sacarlo de 
       calculate_standard_deviation()
       ``` 
 
-## 8. Anexo - Resumen de algunas funciones
+## 7. Anexo - Resumen de algunas funciones
 
 To do...
 
-## 9. Referencias
+## 8. Referencias
 
+* https://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf
 * https://sourcerytools.github.io/advancedlinuxprogramming/
 * https://www.cs.fsu.edu/~baker/realtime/restricted/notes/pthreads.html
 * https://www.oreilly.com/library/view/pthreads-programming/9781449364724/ch01.html
@@ -1137,6 +1138,20 @@ To do...
 * http://www.par.tuwien.ac.at/teaching/2017w/184.710.html
 * http://www-users.cs.umn.edu/~karypis/parbook/
 * http://booksite.elsevier.com/9780123742605/
+* Tanenbaum, A. Modern Operating Systems. Prentice Hall. 2008.
+* https://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html
+* https://isa.umh.es/asignaturas/sitr/TraspSITR_POSIX3_Semaforos.pdf
+* https://lass.cs.umass.edu/~shenoy/courses/fall12/lectures/notes/Lec08_notes.pdf
+* https://www.uio.no/studier/emner/matnat/ifi/INF4140/h11/undervisningsmateriale/slides/03_semaphores.pdf
+* https://users.ece.utexas.edu/~valvano/EE345M/view06_semaphores.pdf
+* https://users.ece.utexas.edu/~valvano/EE345M/
+* https://web.stanford.edu/class/archive/cs/cs110/cs110.1204/static/lectures/12-more-mutex-cv-semaphore.pdf
+* https://www.digitaltechnologieshub.edu.au/media/th1iztua/learn-together_semaphore-system.pdf
+* https://courses.cs.washington.edu/courses/cse451/13au/lectures/8-sema_mon.pdf
+* https://denninginstitute.com/pjd/ArtOS2/M3/3.3-semaphores.pdf
+* https://www.cs.tufts.edu/comp/150CCP/lectures/Lecture10.pdf
+* https://see.stanford.edu/materials/icsppcs107/23-Concurrency-Examples.pdf
+
 
 
 
