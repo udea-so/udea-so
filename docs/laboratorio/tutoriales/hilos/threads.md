@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: threads
+sidebar_label: Hilos
 description: Tutorial sobre hilos
 ---
 

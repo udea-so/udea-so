@@ -52,6 +52,7 @@ const sidebars = {
       label: 'Tutoriales',
       items: [
         'laboratorio/tutoriales/intro',
+        'laboratorio/tutoriales/procesos',
         {
           type: 'category',
           label: 'Hilos y sincronización',
