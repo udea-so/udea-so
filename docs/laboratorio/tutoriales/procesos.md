@@ -45,7 +45,7 @@ En el documento **LINUX System Call Quick Reference** ([enlace](https://wiki.dei
 
 ### 1.1. Ejemplo de llamado al sistema
 
-Para utilizar los llamados al sistema se puede hacer uso de dos diferentes métodos: la función `syscall` o la función de la librería correspondiente ([guia3_ejemplo1.c](/code/labs/tutoriales/procesos/miselanea_ejemplos/guia3_ejemplo1.c)).
+Para utilizar los llamados al sistema se puede hacer uso de dos diferentes métodos: la función `syscall` o la función de la librería correspondiente ([guia3_ejemplo1.c](../../../recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo1.c)).
 
 ```c {12,19} showLineNumbers
 #include <syscall.h>
