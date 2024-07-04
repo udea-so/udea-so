@@ -4,7 +4,6 @@ label: "Sincronización"
 Description: "Tutorial sobre sincronización"
 ---
 
-
 import Image from '@theme/IdealImage';
 
 # Sincronización
