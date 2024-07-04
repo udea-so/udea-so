@@ -514,7 +514,7 @@ A continuación se muestra un programa en el cual hay 3 procesos (el padre y los
 * **Proceso hijo 1**: Invoca el comando ```ls```
 * **Proceso hijo 2**: Invoca el comando ```date```
 
-**Código**: [guia3_ejemplo15.c](guia3_ejemplo15.c)
+**Código**: [guia3_ejemplo14.c](guia3_ejemplo14.c)
 
 ```C
 #include <unistd.h>
