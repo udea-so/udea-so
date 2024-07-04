@@ -7,7 +7,7 @@ Description: "Tutorial sobre sincronización"
 
 import Image from '@theme/IdealImage';
 
-# Hilos y sincronización
+# Sincronización
 
 :::tip[Objetivos]
 * Identificar una condición de competencia y los mecanismos existentes para evitarla.
