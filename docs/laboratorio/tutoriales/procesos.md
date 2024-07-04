@@ -188,7 +188,7 @@ La siguiente figura resume el resultado:
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo2.c](../../../recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo2.c)):
    
    ```c {8} showLineNumbers
    #include <unistd.h>
