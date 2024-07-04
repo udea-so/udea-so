@@ -950,6 +950,10 @@ A continuación se muestra una miselanea de ejemplos con el fin de reforzar los 
 
 ### 3.1. Ejemplos basicos 
 
+:::tip
+**Nota importante**: Los ejemplos de esta sección se encuentran condensados en el siguiente [link](https://github.com/udea-so/udea-so/tree/main/recursos/code/procesos/ejemplo_basico). 
+:::
+
 #### Ejemplo 1
 
 El siguiente ejemplo muestra un uso de las llamadas de sistema Posix [```getpid```](https://pubs.opengroup.org/onlinepubs/9699919799/) y [```sleep```](https://pubs.opengroup.org/onlinepubs/9699919799/).
@@ -1260,14 +1264,13 @@ Ahora bien, la diferencia en los ejemplos en los que se crea el hijo (2, 3 y 4) 
 
 ![summary_calls](/img/labs/tutoriales/procesos/ejemplo_basico/examples2_fe.png)
 
-:::tip
-**Nota importante**: Los **ejemplos basicos** de esta sección se encuentran condensados en el siguiente [link](https://github.com/udea-so/udea-so/tree/main/recursos/code/procesos/ejemplo_basico). 
-:::
-
 ### 3.2. Ejemplos libro Remzi
 
-Esta sección muestra los ejemplos del capitulo [Interlude: Process API](http://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf) del libro de Remzi.
+:::tip
+**Nota importante**: Los ejemplos de esta sección pueden tambien ser accedidos a traves del siguiente [link](https://github.com/udea-so/udea-so/tree/main/recursos/code/procesos/ejemplos_remzi). 
+:::
 
+Esta sección muestra los ejemplos del capitulo [Interlude: Process API](http://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf) del libro de Remzi.
 
 #### Ejemplo 1 - Creación de un nuevo proceso (clonar) 
 
@@ -1421,7 +1424,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-## x. Taller
+## 4. Taller
 
 1. Escriba en consola `man syscalls` y responda: ¿Qué contiene esta llamada al sistema?
 
@@ -1674,10 +1677,7 @@ int main(int argc, char *argv[]) {
  
     * Ejecute el programa, capture en pantalla la salida producida. ¿Por qué el programa produce la salida vista? ¿Qué sucede con un padre que abre un archivo, lo hereda?
 
-## y. Referencias
-
-
-
+## 5. Referencias
 
 * https://www.digikey.com/es/maker/blogs/2024/unveiling-the-power-of-assembly-level-language
 * https://blog.adafruit.com/2021/09/20/modifying-the-linux-kernel-adding-new-syscalls-linux/
@@ -1703,15 +1703,3 @@ int main(int argc, char *argv[]) {
 * https://github.com/0xAX/linux-insides/blob/master/SysCall/linux-syscall-1.md
 * https://sysdig.com/blog/fascinating-world-linux-system-calls/
 * https://www.omscs-notes.com/operating-systems/processes-and-process-management/
-
----------------------------------------------------------------------------------------
-
-* https://github.com/dannymrock/UdeA-SO-Lab/tree/master/lab1
-* https://github.com/dannymrock/UdeA-SO-Lab/tree/master/lab1/ejemplo_basico
-* https://docs.google.com/document/d/1KqR3MCNYvuMZB0ohgpWFg6qHJiFlTiysyOZCxa5Fh4o/edit
-* https://github.com/repos-SO-UdeA/lab7/tree/master/ejemplos_guia3
-  
-
-
-
-
