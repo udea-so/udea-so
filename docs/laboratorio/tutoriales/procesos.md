@@ -45,7 +45,7 @@ En el documento **LINUX System Call Quick Reference** ([enlace](https://wiki.dei
 
 ### 1.1. Ejemplo de llamado al sistema
 
-Para utilizar los llamados al sistema se puede hacer uso de dos diferentes métodos: la función `syscall` o la función de la librería correspondiente ([guia3_ejemplo1.c](../../../recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo1.c)).
+Para utilizar los llamados al sistema se puede hacer uso de dos diferentes métodos: la función `syscall` o la función de la librería correspondiente ([guia3_ejemplo1.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo1.c)).
 
 ```c {12,19} showLineNumbers
 #include <syscall.h>
@@ -188,7 +188,7 @@ La siguiente figura resume el resultado:
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código ([guia3_ejemplo2.c](../../../recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo2.c)):
+1. Compile y ejecute el siguiente código ([guia3_ejemplo2.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo2.c)):
    
    ```c {8} showLineNumbers
    #include <unistd.h>
@@ -220,9 +220,9 @@ La siguiente figura resume el resultado:
 
    1. ¿Cuál es la salida del programa anterior y por qué?
 
-2. **Múltiples hijos**. Un proceso puede crear o tener múltiples hijos **llamando repetidamente** la función `fork`. Y estos hijos pueden tener o crear otros procesos (nietos). La recomendación es tener un proceso padre que cree a todos los hijos que se necesiten. A continuación. se muestran algunas formas de trabajar con varios procesos:
+2. **Múltiples hijos**. Un proceso puede crear o tener múltiples hijos **llamando repetidamente** la función `fork`. Y estos hijos pueden tener o crear otros procesos (nietos). La recomendación es tener un proceso padre que cree a todos los hijos que se necesiten. A continuación, se muestran algunas formas de trabajar con varios procesos:
    
-   * **Múltiples llamados a `fork` mediante condicionales**
+   * **Múltiples llamados a `fork` mediante condicionales** ([guia3_ejemplo3.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo3.c))
      
      ```c {9,15,21} showLineNumbers 
      #include <stdio.h>
@@ -264,7 +264,7 @@ La siguiente figura resume el resultado:
 
      1. ¿Cuál es la salida del programa anterior y por qué?
 
-   * **Múltiples llamados a `fork` mediante ciclos**    
+   * **Múltiples llamados a `fork` mediante ciclos** ([guia3_ejemplo4.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo4.c)) 
   
      ```c {10} showLineNumbers 
      #include <stdio.h>
@@ -296,7 +296,7 @@ La siguiente figura resume el resultado:
      1. ¿Cuál es la salida del programa anterior y por qué?
      2. ¿Como almacenar el `pid` de cada uno de los procesos anteriormente creados sin que se pierda el valor (debido a la sobreescritura de esta variable en el código anterior)?
   
-   * **Múltiples llamados a `fork` mediante ciclos (forma poco usada)**   
+   * **Múltiples llamados a `fork` mediante ciclos (forma poco usada)**  ([guia3_ejemplo5.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo5.c))  
   
      ```c {10} showLineNumbers 
      #include <stdio.h>
@@ -335,7 +335,7 @@ La siguiente figura resume el resultado:
    </figure>
    </p>
 
-   Note que en la figura anterior el **proceso padre** (`0`) creó 3 **procesos hijos** (`1`, `3`, `4`) y **un proceso "nieto"** (`2`). A continuación se muestra el código asociado el problema anterior.
+   Note que en la figura anterior el **proceso padre** (`0`) creó 3 **procesos hijos** (`1`, `3`, `4`) y **un proceso "nieto"** (`2`). A continuación se muestra el código asociado ([guia3_ejemplo6.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo6.c)) el problema anterior.
 
    ```c {8,11,21,27} showLineNumbers 
    #include <unistd.h>
@@ -390,8 +390,6 @@ No se preocupe si aún no comprende las salidas de los códigos anterior. Revise
 
 Así cómo es posible crear procesos también es posible finalizarlos mediante las llamadas a sistema `exit` y `kill`. A continuación vamos a centrarnos en la primera.
 
-
-
 :::info[exit]
 
 **Sintaxis**
@@ -409,7 +407,7 @@ Esta función causa la terminación normal de un proceso. La variable entera `st
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código y analice el efecto de usar la función `exit`:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo7.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo7.c)) y analice el efecto de usar la función `exit`:
    
    ```c {17} showLineNumbers
    #include <unistd.h>
@@ -480,7 +478,7 @@ pid_t wait(int *status);
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo8.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo8.c)):
 
    ```c {23} showLineNumbers
    #include <unistd.h>
@@ -527,7 +525,7 @@ pid_t wait(int *status);
    
    Ahora bien, si hay varios procesos hijos, el proceso padre queda bloqueado hasta que uno de ellos culmina. Al finalizar uno de ellos, se liberan todos los recursos que tengan asociados, recuperándose el valor de retorno devuelto para que pueda ser accesible desde el proceso que realizó la llamada. El siguiente código clarifica un poco esto.
 
-2. Compile y ejecute el siguiente código:
+2. Compile y ejecute el siguiente código ([guia3_ejemplo9.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo9.c)):
    
    ```c {42,44,46} showLineNumbers
    #include <unistd.h>
@@ -630,7 +628,7 @@ int kill(pid_t pid, int sig);
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo10.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo10.c)):
 
    ```c showLineNumbers
    #include <unistd.h>
@@ -680,7 +678,7 @@ int kill(pid_t pid, int sig);
 
    Anteriormente se vio el uso de `kill` como comando, ahora veamos cómo es su empleo como función dentro de un archivo de código.
 
-2. Compile y ejecute el siguiente código fuente:
+2. Compile y ejecute el siguiente código fuente ([guia3_ejemplo11.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo11.c)):
    
    ```c {17} showLineNumbers
    #include <unistd.h>
@@ -719,7 +717,7 @@ Después de que un proceso hijo es creado por su padre haciendo uso de la funci�
   
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código el cual crea un proceso zombie. Elija como nombre del ejecutable `make-zombie`:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo12.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo12.c)) el cual crea un proceso zombie. Elija como nombre del ejecutable `make-zombie`:
    
    ```c showLineNumbers
    #include <stdlib.h>
@@ -805,7 +803,7 @@ int execvp(const char *file, char *const argv[]);
 
 ##### Ejemplos
 
-1. Compile y ejecute el siguiente código:
+1. Compile y ejecute el siguiente código ([guia3_ejemplo13.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo13.c)):
    
    ```c showLineNumbers
    #include <unistd.h>
@@ -881,7 +879,7 @@ El efecto del fragmento de código anterior se puede comprender mas facilmente a
 
 ##### Ejemplos
 
-1. Realizar un programa que invoque los comandos `date` y `ls` (`ls` debe listar el contenido del directorio raíz (`/`)). El padre debe imprimir una vez que los dos subprocesos han culminado la frase `"Hasta la vista baby"`. A continuación se muestra el código asociado al ejemplo anterior:
+1. Realizar un programa que invoque los comandos `date` y `ls` (`ls` debe listar el contenido del directorio raíz (`/`)). El padre debe imprimir una vez que los dos subprocesos han culminado la frase `"Hasta la vista baby"`. A continuación se muestra el código ([guia3_ejemplo14.c](https://github.com/udea-so/udea-so/blob/main/recursos/code/procesos/miselanea_ejemplos/sources/guia3_ejemplo14.c)) asociado al ejemplo anterior:
    
    ```c {10,13,16,19,23,24} showLineNumbers
    #include <unistd.h>
