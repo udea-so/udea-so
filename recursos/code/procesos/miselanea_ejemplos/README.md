@@ -2,7 +2,7 @@
 
 ## Sobre esta guia
 
-En el directorio [sources](./sources) se encuentran todos lo ejemplos del documento [Laboratorio 3-1: Procesos](https://docs.google.com/document/d/1KqR3MCNYvuMZB0ohgpWFg6qHJiFlTiysyOZCxa5Fh4o/edit?usp=sharing). 
+En el directorio [sources](./sources) se encuentran varios ejemplos descritos en el siguiente [link](./sources/README.md). Siga las instrucciones mostradas a continuación para poder compilar y correr estos ejemplos.
 
 ## Poniendo a funcionar los ejemplos
 

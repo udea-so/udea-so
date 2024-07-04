@@ -940,6 +940,11 @@ else
 
 1. Realizar un programa que ejecute un comando que no existe y luego ejecute el comando `ls -l`.
 
+
+:::tip
+**Nota importante**: Todos los ejemplos analizados previamente se pueden compilar y ejecutar siguiento las instrucciones que se describen en el siguiente [link](https://github.com/udea-so/udea-so/tree/main/recursos/code/procesos/miselanea_ejemplos). Lo animamos a que lo haga.
+:::
+
 ## 3. Ejemplos
 
 ### 3.1. s 
