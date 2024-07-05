@@ -864,7 +864,41 @@ A continuación se explican los pasos para llevar a cabo la creación de una lib
   gcc -shared -o libappdyn.so areas.o mensajes.o
   ```
 
-* **Paso 3**: Como la libreria dinámica es enlazada en tiempo de ejecución, es necesario que este se encuentre disponible en dicho momento. El dynamic linker busca las librerias dinamicas en las rutas estandar disponibles en **`LD_LIBRARY_PATH`** y en la cache del sistema (se recomienda explorar el comando **`ldconfig`**). De modo que el proximo paso consiste en agregar el directorio en el cual se encuentra la libreria dinamica a enlazar en la variable de entorno **`LD_LIBRARY_PATH`** de modo que el linker pueda encontrar su archivo de libreria. A continuación se muestra como.
+* **Paso 3**: General el ejecutable empleando la libreria dinamica recien creada:
+  
+  * **Forma 1 - Por pasos**: Realizando el proceso por pasos, es decir, primero generando el archivo objeto y luego, a partir de este generar el ejecutable usando la libreria:
+  
+    ```bash
+    gcc -I. -Wall -c main.c
+    gcc -Wall main.c -o  main libappdy.so
+    ```
+
+  * **Forma 2 - Directo**: Generando el ejecutable al enlazar con la libreria recien creada:
+    
+    ```bash
+    gcc -Wall main.c -o main libappdy.so
+    ```
+  
+  **Preguntas**:
+  1. Intente ejecutar el ejecutable generado. ¿Que sucede? 
+     
+     ```bash
+     ./main
+     ```
+
+  2. Ejecute el comando `ldd` de la siguiente manera y observe la salida
+     
+     ```bash
+     ldd main
+     ```
+ 
+  3. Ejecute el siguiente comando para ver la rutas del dynamic linker:
+     
+     ```bash
+     ldconfig -v
+     ```
+
+* **Paso 4**: Como la libreria dinámica es enlazada en tiempo de ejecución, es necesario que esta se encuentre disponible en dicho momento. El **dynamic linker** busca las librerias dinamicas en las rutas estandar disponibles en **`LD_LIBRARY_PATH`** y en la cache del sistema (se recomienda explorar el comando **`ldconfig`**). De modo que el proximo paso consiste en agregar el directorio, en el cual se encuentra la libreria dinamica a enlazar, en la variable de entorno **`LD_LIBRARY_PATH`** de modo que el linker pueda encontrar su archivo de libreria. A continuación se muestra como.
   
   ```bash
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/my_path/
@@ -876,18 +910,42 @@ A continuación se explican los pasos para llevar a cabo la creación de una lib
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
   echo $LD_LIBRARY_PATH
   ```
+  
+  :::tip
+  Cuando se cierra la terminal en la cual creó, actualizó o modificó una variable de entorno en cuestion, los cambios se pierden. Con el fin de que estos cambios no se pierdan y la variable este disponible para todas las sesiones del bash lo que se puede hacer es agregarla editando el archivo de configuración `~/.bashrc`: 
 
-  Si no se quiere hacer uso de la variable de entorno **`LD_LIBRARY_PATH`** otra forma es usar **`/usr/local/lib`** pues este ya se encuentra especificado en esta variable de entorno. Posteriormente, se ejecuta **`ldconfig`** en el directorio al cual se movio la libreria **`.so`** para agregarla a cache de modo que pueda ser encontrada cuando el sistema este indagando por una libreria compartida:
+  ```sh
+  # .bashrc
+  ...
+
+  # Variable de entorno LD_LIBRARY_PATH
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:my_path
+  ``` 
+  
+  y luego ejecutando el comando `source` para que los cambios tengan efecto:
 
   ```bash
-  ldconfig /usr/local/lib
+  source ~/.bashrc
   ```
+  :::
+   
+  
 
-* **Paso 4**: Una vez lo anterior es realizado el procedimiendo final consiste en general el ejecutable empleando la libreria dinamica recien creada:
+  :::tip
+  Si no se quiere hacer uso de la variable de entorno **`LD_LIBRARY_PATH`** otra forma es usar las rutas **`/usr/local/lib`** o **`/usr/lib`** pues estas ya es encuentran incluidas en la ruta de busqueda del linker por defecto. Para esto, lo que se hace es realizar una copia de la libreria dinamica recien creada a uno de los directorios anteiores y porteriormente ejecutar el comando **`ldconfig`**. A continuación se muestra el procedimiento para el comando empleado para el caso que se esta analizando:
+  
+  ```bash
+  sudo cp libappdy.so /usr/local/lib
+  sudo ldconfig
+  ldconfig -v
+  ```
+  :::
 
-```bash
-gcc -Wall main.c -o  main2 libappdy.so
-```
+* **Paso 5**:  Ahora si, si todo esta bien, ya es posible ejecutar el programa tal y como se muestra a continuación:
+
+  ```bash
+  ./main
+  ```
 
 ----
 * https://www3.ntu.edu.sg/home/ehchua/programming/cpp/gcc_make.html
