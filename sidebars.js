@@ -52,6 +52,17 @@ const sidebars = {
       label: 'Tutoriales',
       items: [
         'laboratorio/tutoriales/intro',
+        {
+          type: 'category',
+          label: 'Herramientas',
+          items: [
+            'laboratorio/tutoriales/herramientas/linux',
+            'laboratorio/tutoriales/herramientas/gcc',
+            'laboratorio/tutoriales/herramientas/make',
+            'laboratorio/tutoriales/herramientas/gdb',
+            'laboratorio/tutoriales/herramientas/valgrind',
+          ]
+        },
         'laboratorio/tutoriales/procesos',
         {
           type: 'category',

@@ -1,0 +1,40 @@
+<mxfile host="Electron" modified="2024-07-05T02:20:19.823Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="-iKKr9TFJtLEVnJmwdkl" version="24.6.4" type="device">
+  <diagram name="Página-1" id="LsDu3u4bDJq17SXWeaOr">
+    <mxGraphModel dx="880" dy="532" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-1" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" parent="1" vertex="1">
+          <mxGeometry x="110" y="130" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-4" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;areas.h&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="115" y="100" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-5" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;areas.c&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="230" y="100" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-6" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" parent="1" vertex="1">
+          <mxGeometry x="230" y="130" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-7" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" parent="1" vertex="1">
+          <mxGeometry x="352.5" y="130" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-8" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;mensajes.h&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="347.5" y="100" width="75" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-10" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" parent="1" vertex="1">
+          <mxGeometry x="475" y="130" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Lz73GD6M7uqh9QbwLpAi-11" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;mensajes.c&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="470" y="100" width="75" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cKqFeQ3nBFacUrV40V39-1" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="595" y="130" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cKqFeQ3nBFacUrV40V39-2" value="&lt;font face=&quot;Courier New&quot;&gt;&lt;b&gt;main.c&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="590" y="100" width="75" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
