@@ -4,13 +4,15 @@ label: "gdb"
 Description: "Tutorial sobre gdb"
 ---
 
-
 # GDB
 
-En construcción...
+
+
+
 
 ## x. Referencias
 
+* https://engineering.purdue.edu/ece264/24su/schedule
 * https://www3.ntu.edu.sg/home/ehchua/programming/index.html
 * https://www3.ntu.edu.sg/home/ehchua/programming/cpp/gcc_make.html
 * https://www3.ntu.edu.sg/home/ehchua/programming/cpp/gcc_make.html
