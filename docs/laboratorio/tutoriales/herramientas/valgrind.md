@@ -46,9 +46,6 @@ Poner algo sobre el mapa de memoria a modo de recuerdo...
 Colocar algunas funciones de manejo de memoria...
 
 
-
-
-
 <!--
 3. [Valgrind Debugging	Utility](/pdfs/valgrind/Valgrind.pdf)
 -->
@@ -205,7 +202,7 @@ Vamos a proceder a realizar el analisis:
    #include <stdlib.h>
 
    void f(void) {
-    int* x = malloc(10 * sizeof(int));
+    int* x = malloc(10 * sizeof(int)); 
     x[9] = 0;        
     free(x);
    }                  
@@ -252,12 +249,12 @@ Vamos a proceder a realizar el analisis:
 
 ## 3. Analisis de memoria usando `valgrind`
 
-Tal y como se mencionó con anterioridad, mediante la herramienta **``Memcheck`** de **`valgrind`** es posible encontrar e identificar errores de memoria. Algunos de los tipos de memoria que se pueden identificar mediante el uso de esta herramienta son:
+Tal y como se mencionó con anterioridad, mediante la herramienta **`Memcheck`** de **`valgrind`** es posible encontrar e identificar errores de memoria. Algunos de los tipos de memoria que se pueden identificar mediante el uso de esta herramienta son:
 * Uso de memoria no inicializada.
 * Lectura o escritura de memoria liberada con `free`
 * Lectura o escritura fuera del area reservada con `malloc`
 * Lectura o escritura inapropiada de la pila
-* **Memory leaks** (fugas de memoria), cuando se pierden los punteros a un área de memoria pedida con `malloc`
+* Memory leaks (fugas de memoria), cuando se pierden los punteros a un área de memoria pedida con `malloc`
 * Correspondencia entre `malloc` y `free`
 * Traslape de memoria de origen y destino en `memcpy` y funciones relacionadas
 
@@ -278,500 +275,555 @@ A continuación se van a analizar diferentes casos de errores de memoria que pue
 
 ### 3.1. Caso de uso: Memcheck – Uninitialized Memory
 
+Este error se da cuando:
+* Las variables locales intentan ser leidas sin haber sido inicializadas.
+* Se intenta acceder a bloques de memoria asignados con ``malloc` sin estos haber sido previamente inicializados.
 
-4.2.3.1. Use of uninitialized memory
-Sources of uninitialized data are:
-· local variables that have not been initialized.
-· The contents of malloc'd blocks, before writing something there.
+Cuando la reserva se hace usando `calloc` no se presenta este problema ya que los bloques de memoria reservados son inilizalizado con `0`.
 
-This is not a problem with calloc since it initializes each allocated bytes with 0. The new operator in C++
-is similar to malloc. Fields of the created object will be uninitialized.
+#### Ejemplos
 
-```c {5} showLineNumbers
-#include <stdlib.h>
+1. Mediante el uso del `Valgrind` realice el analisis de memoria para el código (example1.c) mostrado a continuación:
 
-int main() { 
-  int p, t;
-  if (p == 5) /*Error occurs here*/
-    t = p + 1;
-  return 0;
-}
-```
+   ```c {5} showLineNumbers
+   #include <stdlib.h>
 
-```
-gcc -Wall -g example1.c -o example1.out
-```
+   int main() { 
+     int p, t;
+     if (p == 5) /*Error occurs here*/
+       t = p + 1;
+     return 0;
+   }
+   ```
+   
+   Para la compilación del archivo fuente se usa el `gcc` con la bandera `-g` activada:
 
-p is uninitialized and may contain garbage, resulting in an error if used to determine
-branch-outcome or memory address (ex: a[p] = y)
+   ```
+   gcc -Wall -g example1.c -o example1.out
+   ```
+   
+   El comando `valgrind` ejecutado para este caso se muestra a continuación:
 
-```
-valgrind --leak-check=yes --track-origins=yes ./example1.out
-```
+   ```
+   valgrind --leak-check=yes ./example1.out
+   ```
+   
+   :::info
+    Note que en el comando anterior no fue necesario usar la opción ```--tool=memcheck``` por que esta es la herramienta por defecto que usa `valgrind`. En todo caso, el comando equivalente se muestra a continuación:
 
-```sh
-==132== Memcheck, a memory error detector
-==132== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==132== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==132== Command: ./example1.out
-==132==
-==132== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==132== Conditional jump or move depends on uninitialised value(s)
-==132==    at 0x109135: main (example1.c:5)
-# highlight-end
-==132==
-==132==
-==132== HEAP SUMMARY:
-==132==     in use at exit: 0 bytes in 0 blocks
-==132==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==132==
-==132== All heap blocks were freed -- no leaks are possible
-==132==
-==132== Use --track-origins=yes to see where uninitialised values come from
-==132== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==132== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-# highlight-end
-```
+    ```
+    valgrind --tool=memcheck --leak-check=yes ./example1.out
+    ```
+   :::
 
-```
-valgrind --leak-check=yes --track-origins=yes ./example1.out
-```
+   La salida resultante es la siguiente.
 
-```sh
-==134== Memcheck, a memory error detector
-==134== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==134== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==134== Command: ./example1.out
-==134==
-==134== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==134== Conditional jump or move depends on uninitialised value(s)
-==134==    at 0x109135: main (example1.c:5)
-==134==  Uninitialised value was created by a stack allocation
-==134==    at 0x109129: main (example1.c:3)
-# highlight-end
-==134==
-==134==
-==134== HEAP SUMMARY:
-==134==     in use at exit: 0 bytes in 0 blocks
-==134==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==134==
-==134== All heap blocks were freed -- no leaks are possible
-==134==
-==134== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==134== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-# highlight-end
-```
+   ```sh
+   ==132== Memcheck, a memory error detector
+   ==132== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==132== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==132== Command: ./example1.out
+   ==132==
+   ==132== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==132== Conditional jump or move depends on uninitialised value(s)
+   ==132==    at 0x109135: main (example1.c:5)
+   # highlight-end
+   ==132==
+   ==132==
+   ==132== HEAP SUMMARY:
+   ==132==     in use at exit: 0 bytes in 0 blocks
+   ==132==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+   ==132==
+   ==132== All heap blocks were freed -- no leaks are possible
+   ==132==
+   ==132== Use --track-origins=yes to see where uninitialised values come from
+   ==132== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==132== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
+   
+   Como se resalta en la salida anterior, se hace enfasis que en la linea `5` del archivo `example1.c` el condicional depende de una variable no inicializada lo cual hace que el comportamiento del programa no se pueda predecir generando un error de lógica. Si se desea conocer el origen de las variables no inicializadas se puede activar la opción `--track-origins` tal y como se muestra en el siguiente comando.
 
-------------
+   ```
+   valgrind --leak-check=yes --track-origins=yes ./example1.out
+   ```
 
-p is uninitialized and
-may contain garbage,
-resulting in an error if
-used to determine
-branch-outcome or
-memory address
-(ex: a[p] = y)
+   Como se puede observar en la salida, en la parte asociada al **Backtrace** (resaltada a continuación) se muestra el origen del problema esta en la linea 3 del archivo `example1.c`, que es donde se hizo la declaración de la variable `p` sin inicializarla de modo que su valor es desconocido.
 
-------------------------------
+   ```sh
+   ==134== Memcheck, a memory error detector
+   ==134== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==134== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==134== Command: ./example1.out
+   ==134==
+   ==134== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==134== Conditional jump or move depends on uninitialised value(s)
+   ==134==    at 0x109135: main (example1.c:5)
+   ==134==  Uninitialised value was created by a stack allocation
+   ==134==    at 0x109129: main (example1.c:3)
+   # highlight-end
+   ==134==
+   ==134==
+   ==134== HEAP SUMMARY:
+   ==134==     in use at exit: 0 bytes in 0 blocks
+   ==134==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+   ==134==
+   ==134== All heap blocks were freed -- no leaks are possible
+   ==134==
+   ==134== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==134== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
 
 ### 3.2. Caso de uso: Memcheck – Illegal read/write
 
-Illegal read/write errors occurs when you try to read/write from/to an address that is not in the address range
-of your program.
+Un error de acceso ilegal a memoria **`Illegal read/write error`** ocurre cuando se intenta leer o escribir en una dirección de memoria a la que no tiene acceso autorizado (dirección que no se encuentra en el rango de direcciones validas del programa). A continuación se detallan algunas situaciones que causan este tipo de error:
+1. **Acceso a Memoria Liberada**: Leer o escribir en memoria después de haberla liberado.
+   
+   ```c
+   int *ptr = malloc(sizeof(int));
+   free(ptr);
+   *ptr = 42; // Illegal write
+   ```
 
-```c {6,7} showLineNumbers
-#include <stdlib.h>
+2. **Acceso Fuera de los Límites de un Arreglo**: Indices del arreglo fuera de rango.
+   
+   ```c
+   int arr[10];
+   arr[10] = 5; // Illegal write, índice fuera del rango
+   ```
 
-int main() {
-  int *p, i, a;
-  p = malloc(10*sizeof(int));
-  p[11] = 1; /* invalid write error */
-  a = p[11]; /* invalid read error */
-  free(p);
-  return 0;
-}
-```
-Here you are trying to read/write from/to address (p+sizeof(int)*11) which is not allocated to the program.
+3. **Acceso a Punteros No Inicializados**: Utilizar punteros que no han sido inicializados.
+   
+   ```c
+   int *ptr;
+   *ptr = 42; // Illegal write
+   ```
 
-Attempting to read/write
-from address
-(p+sizeof(int)*11)
-which has not been
-allocated
+4. **Desbordamiento de Pila**: Usar más memoria de pila de la que está disponible.
+   
+   ```c
+   void func() {
+     int arr[1000000]; // Puede causar un desbordamiento de pila
+   }
+   ```
 
-```
-gcc -g -Wall example2.c -o example2.out
-```
+#### Ejemplos
 
-```
-valgrind --tool=memcheck --leak-check=yes ./example2.out
-```
+1. Haga un analisis de memoria para el siguiente código (example2.c) usando `valgrind`:
+   
+   ```c {6,7} showLineNumbers
+   #include <stdlib.h>
 
-Salida
+   int main() {
+     int *p, i, a;
+     p = malloc(10*sizeof(int));
+     p[11] = 1; /* invalid write error */
+     a = p[11]; /* invalid read error */
+     free(p);
+     return 0;
+   }
+   ```
 
-```sh
-==141== Memcheck, a memory error detector
-==141== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==141== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==141== Command: ./example2.out
-==141==
-==141== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==141== Invalid write of size 4
-==141==    at 0x10918B: main (example2.c:6)
-==141==  Address 0x4a4a06c is 4 bytes after a block of size 40 alloc'd
-==141==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==141==    by 0x10917E: main (example2.c:5)
-# highlight-end
-==141==
-# highlight-start
-==141== Invalid read of size 4
-==141==    at 0x109195: main (example2.c:7)
-==141==  Address 0x4a4a06c is 4 bytes after a block of size 40 alloc'd
-==141==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==141==    by 0x10917E: main (example2.c:5)
-# highlight-end
-==141==
-==141==
-==141== HEAP SUMMARY:
-==141==     in use at exit: 0 bytes in 0 blocks
-==141==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
-==141==
-==141== All heap blocks were freed -- no leaks are possible
-==141==
-==141== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==141== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
-# highlight-end
-```
+   Para compilar el programa tenemos el siguiente comando:
 
---------------
+   ```
+   gcc -g -Wall example2.c -o example2.out
+   ```
+   
+   El comando `valgrind` empleando la herramienta `Memcheck` se muestra a continuación:
+
+   ```
+   valgrind --tool=memcheck --leak-check=yes ./example2.out
+   ```
+   
+   La salida resultante se muestra a continuación:
+
+   ```sh
+   ==141== Memcheck, a memory error detector
+   ==141== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==141== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==141== Command: ./example2.out
+   ==141==
+   ==141== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==141== Invalid write of size 4
+   ==141==    at 0x10918B: main (example2.c:6)
+   ==141==  Address 0x4a4a06c is 4 bytes after a block of size 40 alloc'd
+   ==141==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==141==    by 0x10917E: main (example2.c:5)
+   # highlight-end
+   ==141==
+   # highlight-start
+   ==141== Invalid read of size 4
+   ==141==    at 0x109195: main (example2.c:7)
+   ==141==  Address 0x4a4a06c is 4 bytes after a block of size 40 alloc'd
+   ==141==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==141==    by 0x10917E: main (example2.c:5)
+   # highlight-end
+   ==141==
+   ==141==
+   ==141== HEAP SUMMARY:
+   ==141==     in use at exit: 0 bytes in 0 blocks
+   ==141==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+   ==141==
+   ==141== All heap blocks were freed -- no leaks are possible
+   ==141==
+   ==141== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==141== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
+
+   Como se muestra en la parte resaltada anteriormente, en el código anterior se esta intentando escribir en un area de memoria invalida (dirección `p+sizeof(int)*11`) pues solo se reservo memoria para 10 datos tipo `int`, no para 11.
 
 ### 3.3. Caso de uso: Memcheck – Invalid free
 
-Valgrind keeps track of blocks allocated to your program with malloc/new. So it can easily check whether
-argument to free/delete is valid or not.
+Un error tipo **`Invalid free`** se da tipicamente en escenarios como los que se describen a continuación:
+1. **Doble liberación de memoria**: Intentar liberar la misma porción de memoria más de una vez.
+   
+   ```c
+   int* ptr = (int*)malloc(sizeof(int));
+   free(ptr);
+   free(ptr);  // Error: doble liberación
+   ```
 
-```c {9} showLineNumbers
-#include <stdlib.h>
+2. **Liberar memoria no asignada dinámicamente**: Intentar liberar un puntero que no apunta a memoria dinamicamente asignada.
+   
+   ```c
+   int a;
+   int* ptr = &a;
+   free(ptr);  // Error: no se puede liberar memoria estática o automática
+   ```
 
-int main() {
-  int *p, i;
-  p = malloc(10*sizeof(int));
-  for(i = 0;i < 10;i++)
-    p[i] = i;
-  free(p);
-  free(p); /* Error: p has already been freed */
-  return 0;
-}
-```
+#### Ejemplos
 
-Valgrind checks the address, which is given as argument to free. If it is an address that has already been freed
-you will be told that the free is invalid.
+1. Usando `valgrind` analice el código (example3.c) que se muestra a continuación:
 
+   ```c {9} showLineNumbers
+   #include <stdlib.h>
 
-Valgrind checks the
-address passed to the
-free() call and sees
-that it has already been
-freed.
+   int main() {
+     int *p, i;
+     p = malloc(10*sizeof(int));
+     for(i = 0;i < 10;i++)
+       p[i] = i;
+     free(p);
+     free(p); /* Error: p has already been freed */
+     return 0;
+   }
+   ```
 
-```
-gcc -g -Wall example3.c -o example3.out
-```
+   El comando de compilación se muestra a continuación:
 
+   ```
+   gcc -g -Wall example3.c -o example3.out
+   ```
+   
+   El comando `valgring` empleado es el siguiente:
 
-```
-valgrind --leak-check=yes ./example3.out
-```
+   ```
+   valgrind --leak-check=yes ./example3.out
+   ```
 
+   Finalmente, los resultados del ejecutar el `valgrind` tienen la siguiente forma:
 
-```sh
-==148== Memcheck, a memory error detector
-==148== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==148== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==148== Command: ./example3.out
-==148==
-==148== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==148== Invalid free() / delete / delete[] / realloc()
-==148==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==148==    by 0x1091C6: main (example3.c:9)
-==148==  Address 0x4a4a040 is 0 bytes inside a block of size 40 free'd
-==148==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==148==    by 0x1091BA: main (example3.c:8)
-==148==  Block was alloc'd at
-==148==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==148==    by 0x10917E: main (example3.c:5)
-# highlight-end
-==148==
-==148==
-==148== HEAP SUMMARY:
-==148==     in use at exit: 0 bytes in 0 blocks
-==148==   total heap usage: 1 allocs, 2 frees, 40 bytes allocated
-==148==
-==148== All heap blocks were freed -- no leaks are possible
-==148==
-==148== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==148== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-# highlight-end
-```
+   ```sh
+   ==148== Memcheck, a memory error detector
+   ==148== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==148== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==148== Command: ./example3.out
+   ==148==
+   ==148== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==148== Invalid free() / delete / delete[] / realloc()
+   ==148==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==148==    by 0x1091C6: main (example3.c:9)
+   ==148==  Address 0x4a4a040 is 0 bytes inside a block of size 40 free'd
+   ==148==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==148==    by 0x1091BA: main (example3.c:8)
+   ==148==  Block was alloc'd at
+   ==148==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==148==    by 0x10917E: main (example3.c:5)
+   # highlight-end
+   ==148==
+   ==148==
+   ==148== HEAP SUMMARY:
+   ==148==     in use at exit: 0 bytes in 0 blocks
+   ==148==   total heap usage: 1 allocs, 2 frees, 40 bytes allocated
+   ==148==
+   ==148== All heap blocks were freed -- no leaks are possible
+   ==148==
+   ==148== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==148== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
+   
+   Como se resalta en la salida anterior, al realizar un doble `free` se libero un espacio de memoria que ya no existia (debido a la primera llamada `free` realizada).
 
-### 3.3. Caso de uso: Memcheck – Errors Occur Due to Invalid System Call Parameter
+### 3.4. Caso de uso: Memcheck – Invalid System Call Parameter
 
+En `Valgrind` el error `Invalid System Call Parameter` indica que el programa esta pasando argumentos incorrectos a una llamada se sistema.
 
+#### Ejemplos
 
+1. Analice el siguiente códido (example4.c) con `valgrind`:
+   
+   ```c {7} showLineNumbers
+   #include <stdlib.h>
+   #include <unistd.h>
 
-Valgrind checks all parameters to system calls.
+   int main() {
+     int *p;
+     p = malloc(10);
+     read(0, p, 100); /* Error: unaddressable bytes */
+     free(p);
+     return 0;
+   }
+   ```
 
-```c {7} showLineNumbers
-#include <stdlib.h>
-#include <unistd.h>
+   El comando empleado para compilar se muestra a continuación:
 
-int main() {
-  int *p;
-  p = malloc(10);
-  read(0, p, 100); /* Error: unaddressable bytes */
-  free(p);
-  return 0;
-}
-```
+   ```
+   gcc -g -Wall example4.c -o example4.out 
+   ```
+   
+   El comando `valgrind` empleado es el siguiente:
 
-Here, buf = p contains the address of a 10 byte block. The read system call tries to read 100 bytes from
-standard input and place it at p. But the bytes after the first 10 are unaddressable.
+   ```
+   valgrind --leak-check=yes ./example4.out
+   ```
+   
+   De la salida resultante a continuación, se puede apreciar la llamada al sistema esta intentando leer desde la entrada estandar `100 bytes` y colocarlos en el buffer `p` cuyo tamaño es de `10 bytes` lo cual genera un error pues solo los primeros `10 bytes` son accesibles. 
+    
+   ```sh
+   ==155== Memcheck, a memory error detector
+   ==155== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==155== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==155== Command: ./example4.out
+   ==155==
+   ==155== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==155== Syscall param read(buf) points to unaddressable byte(s)
+   ==155==    at 0x4962FD2: read (read.c:26)
+   ==155==    by 0x1091B8: main (example4.c:7)
+   ==155==  Address 0x4a4a04a is 0 bytes after a block of size 10 alloc'd
+   ==155==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==155==    by 0x10919E: main (example4.c:6)
+   # highlight-end
+   ==155==
 
-read() tries to read 100
-bytes from stdin and
-place the results in p but
-the bytes after the firs 10
-are unaddressable.
-
-```
-gcc -g -Wall example4.c -o example4.out 
-```
-
-```
-valgrind --leak-check=yes ./example4.out
-```
-
-```sh
-==155== Memcheck, a memory error detector
-==155== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==155== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==155== Command: ./example4.out
-==155==
-==155== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==155== Syscall param read(buf) points to unaddressable byte(s)
-==155==    at 0x4962FD2: read (read.c:26)
-==155==    by 0x1091B8: main (example4.c:7)
-==155==  Address 0x4a4a04a is 0 bytes after a block of size 10 alloc'd
-==155==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==155==    by 0x10919E: main (example4.c:6)
-# highlight-end
-==155==
-
-==155==
-==155== HEAP SUMMARY:
-==155==     in use at exit: 0 bytes in 0 blocks
-==155==   total heap usage: 1 allocs, 1 frees, 10 bytes allocated
-==155==
-==155== All heap blocks were freed -- no leaks are possible
-==155==
-==155== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==155== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-# highlight-end
-```
-
+   ==155==
+   ==155== HEAP SUMMARY:
+   ==155==     in use at exit: 0 bytes in 0 blocks
+   ==155==   total heap usage: 1 allocs, 1 frees, 10 bytes allocated
+   ==155==
+   ==155== All heap blocks were freed -- no leaks are possible
+   ==155==
+   ==155== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==155== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
 
 ### 3.4. Caso de uso: Memcheck – Memory Leak Detection
 
+Recordemos que un **memory leak** (fuga de memoria) se da cuando un programa no libera la memoria (dinamicamente reservada) que ya no necesita. Existen varias clases de fugas, las principales son:
+* **definitely lost**: En este caso, los bloques de memoria asignados se pierden definitivamente debido a que el apuntador relacionado con estos se pierde (al apuntar a otra parte por ejemplo) de tal manera que no es posible acceder nuevamente a la dirección asociada a dichos bloques.
+  
+  ```c
+  int *b = (int *)malloc(10*sizeof(int));
+  b = (int *)NULL; // Se pierde el puntero
+  ```
 
-Consider the following program:
+* **possibly lost**: Este caso se da cuando el `valgrind` no tiene la certeza sobre la perdida de un bloque debido a que aun hay apuntadores que todavia lo referencian. Por ejemplo hacer cosas como mover un apuntador a la mitad del bloque referencia por este en el heap puede hacer que se de este problema.
+  
+  ```c
+  int *a = (int *)malloc(1024*sizeof(int));
+  *a = 1; 
+  ```
 
-```c showLineNumbers
-#include <stdlib.h>
+Cuando se esta realizando analisis de fugas de memoria, la recomendación es usar la opción `--leak-check=full` pues dara información del tipo de perdida que se tiene.
 
-int main() {
-  int *p, i;
-  p = malloc(5*sizeof(int));
-  for(i = 0;i < 5;i++)
-    p[i] = i;
-  return 0;
-}
-```
+#### Ejemplo
 
-In the above program p contains the address of a 20−byte block. But it is not freed anywhere in the program.
-So the pointer to this 20 byte block is lost forever. This is known as memory leaking. We can get the leak
-summary by using the Valgrind option −−leak−check=yes.
+1. Considere el siguiente programa (example5.c):
 
-20 unfreed blocks at
-routine exit – memory
-leak.
+   ```c showLineNumbers
+   #include <stdlib.h>
 
-```
-gcc -g -Wall example5.c -o example5.out 
-```
+   int main() {
+   int *p, i;
+   p = malloc(5*sizeof(int));
+   for(i = 0;i < 5;i++)
+     p[i] = i;
+   return 0;
+   } 
+   ```
+   
+   Para compilar el programa tenemos:
 
-```
-valgrind --leak-check=yes ./example5.out
-```
+   ```
+   gcc -g -Wall example5.c -o example5.out 
+   ```
+   
+   El comando `valgrind` aplicado se muestra a continuación:
 
-```sh
-==162== Memcheck, a memory error detector
-==162== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==162== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==162== Command: ./example5.out
-==162==
-==162== error calling PR_SET_PTRACER, vgdb might block
-==162==
-# highlight-start
-==162== HEAP SUMMARY:
-==162==     in use at exit: 20 bytes in 1 blocks
-==162==   total heap usage: 1 allocs, 0 frees, 20 bytes allocated
-==162==
-==162== 20 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==162==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==162==    by 0x10915E: main (example5.c:5)
-# highlight-end
-==162==
-# highlight-start
-==162== LEAK SUMMARY:
-==162==    definitely lost: 20 bytes in 1 blocks
-==162==    indirectly lost: 0 bytes in 0 blocks
-==162==      possibly lost: 0 bytes in 0 blocks
-==162==    still reachable: 0 bytes in 0 blocks
-==162==         suppressed: 0 bytes in 0 blocks
-# highlight-end
-==162==
-==162== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==162== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-# highlight-end
-```
+   ```
+   valgrind --leak-check=full ./example5.out
+   ```
+   
+   Para este caso, la salida arrojada se muestra a continuación:
 
-## 4. Ejemplo completo
+   ```sh
+   ==144== Memcheck, a memory error detector
+   ==144== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==144== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==144== Command: ./example5.out
+   ==144==
+   ==144== error calling PR_SET_PTRACER, vgdb might block
+   ==144==
+   # highlight-start
+   ==144== HEAP SUMMARY:
+   ==144==     in use at exit: 20 bytes in 1 blocks
+   ==144==   total heap usage: 1 allocs, 0 frees, 20 bytes allocated
+   ==144==
+   ==144== 20 bytes in 1 blocks are definitely lost in loss record 1 of 1
+   ==144==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==144==    by 0x10915E: main (example5.c:5)
+   # highlight-end
+   ==144==
+   # highlight-start
+   ==144== LEAK SUMMARY:
+   ==144==    definitely lost: 20 bytes in 1 blocks
+   ==144==    indirectly lost: 0 bytes in 0 blocks
+   ==144==      possibly lost: 0 bytes in 0 blocks
+   ==144==    still reachable: 0 bytes in 0 blocks
+   ==144==         suppressed: 0 bytes in 0 blocks
+   # highlight-end
+   ==144==
+   ==144== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==144== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
 
-
-```c
-/* sample.c */
-#include <stdio.h>
-#include <stdlib.h>
-#define SIZE 100
-
-int main() {
-  int i, sum = 0;
-  int *a = malloc(SIZE);
-  for(i=0; i < SIZE; ++i) 
-    sum += a[i];
-  a[26] = 1;
-  a = NULL;
-  if(sum > 0) 
-    printf("Hi!\n");
-  return 0;
-}
-```
-
-```
-gcc -g -Wall sample.c -o sample.out
-```
-
-```
-valgrind --tool=memcheck --leak-check=yes ./sample.out
-```
-
-```sh
-==169== Memcheck, a memory error detector
-==169== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==169== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==169== Command: ./sample.out
-==169==
-==169== error calling PR_SET_PTRACER, vgdb might block
-# highlight-start
-==169== Invalid read of size 4
-==169==    at 0x1091A7: main (sample.c:10)
-==169==  Address 0x4a4a0a4 is 0 bytes after a block of size 100 alloc'd
-==169==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==169==    by 0x109185: main (sample.c:8)
-# highlight-end
-==169==
-# highlight-start
-==169== Invalid write of size 4
-==169==    at 0x1091BE: main (sample.c:11)
-==169==  Address 0x4a4a0a8 is 4 bytes after a block of size 100 alloc'd
-==169==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==169==    by 0x109185: main (sample.c:8)
-# highlight-end
-==169==
-# highlight-start
-==169== Conditional jump or move depends on uninitialised value(s)
-==169==    at 0x1091D0: main (sample.c:13)
-# highlight-end
-==169==
-Hi!
-==169==
-# highlight-start
-==169== HEAP SUMMARY:
-==169==     in use at exit: 100 bytes in 1 blocks
-==169==   total heap usage: 2 allocs, 1 frees, 612 bytes allocated
-==169==
-==169== 100 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==169==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==169==    by 0x109185: main (sample.c:8)
-# highlight-end
-==169==
-# highlight-start
-==169== LEAK SUMMARY:
-==169==    definitely lost: 100 bytes in 1 blocks
-==169==    indirectly lost: 0 bytes in 0 blocks
-==169==      possibly lost: 0 bytes in 0 blocks
-==169==    still reachable: 0 bytes in 0 blocks
-==169==         suppressed: 0 bytes in 0 blocks
-# highlight-end
-==169==
-==169== Use --track-origins=yes to see where uninitialised values come from
-==169== For lists of detected and suppressed errors, rerun with: -s
-# highlight-start
-==169== ERROR SUMMARY: 78 errors from 4 contexts (suppressed: 0 from 0)
-# highlight-end
-```
-
------
-Ver:
-* https://github.com/dannymrock/UdeA-SO-Lab/tree/master/lab2/herramientas/valgrind
-* https://docs.utnso.com.ar/guias/herramientas/valgrind
-* **Valgrind HOWTO** [[link]](/pdfs/valgrind/Valgrind-HOWTO.pdf)
-* **Manual Rápido de Valgrind CC31A** de José Miguel Piquer y equipo [[link]](/pdfs/valgrind/valgrind.pdf)
+   En el programa anterior, `p` contiene la dirección de un bloque de `20 bytes` pero este no es liberado en ninguna parte del programa. De manera que el puntero a este bloque de `20 bytes` se pierde por siempre.
 
 
+## 4. Miselanea de ejemplos
 
+1. Dado el siguiente programa (sample.c):
+   
+   ```c
+   /* sample.c */
+   #include <stdio.h>
+   #include <stdlib.h>
+   #define SIZE 100
 
+   int main() {
+     int i, sum = 0;
+     int *a = malloc(SIZE);
+     for(i=0; i < SIZE; ++i) 
+       sum += a[i];
+     a[26] = 1;
+     a = NULL;
+     if(sum > 0) 
+       printf("Hi!\n");
+     return 0;
+   }
+   ```
 
-## x. Referencias
+   El comando empleado para compilar se muestra a continuación: 
 
+   ```
+   gcc -g -Wall sample.c -o sample.out
+   ```
+   
+   El comando de `valgrind` se muestra a continuación:
 
-Material de consulta: https://docs.utnso.com.ar/guias/herramientas/valgrind
+   ```
+   valgrind --tool=memcheck --leak-check=full ./sample.out
+   ```
+
+   La salida resultante tiene la siguiente forma:
+
+   ```
+   ==152== Memcheck, a memory error detector
+   ==152== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+   ==152== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+   ==152== Command: ./sample.out
+   ==152==
+   ==152== error calling PR_SET_PTRACER, vgdb might block
+   # highlight-start
+   ==152== Invalid read of size 4
+   ==152==    at 0x1091A7: main (sample.c:10)
+   ==152==  Address 0x4a4a0a4 is 0 bytes after a block of size 100 alloc'd
+   ==152==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==152==    by 0x109185: main (sample.c:8)
+   # highlight-end
+   ==152==
+   # highlight-start
+   ==152== Invalid write of size 4
+   ==152==    at 0x1091BE: main (sample.c:11)
+   ==152==  Address 0x4a4a0a8 is 4 bytes after a block of size 100 alloc'd
+   ==152==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==152==    by 0x109185: main (sample.c:8)
+   # highlight-end
+   ==152==
+   # highlight-start
+   ==152== Conditional jump or move depends on uninitialised value(s)
+   ==152==    at 0x1091D0: main (sample.c:13)
+   # highlight-end
+   ==152==
+   Hi!
+   ==152==
+   # highlight-start
+   ==152== HEAP SUMMARY:
+   ==152==     in use at exit: 100 bytes in 1 blocks
+   ==152==   total heap usage: 2 allocs, 1 frees, 612 bytes allocated
+   ==152==
+   ==152== 100 bytes in 1 blocks are definitely lost in loss record 1 of 1
+   ==152==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+   ==152==    by 0x109185: main (sample.c:8)
+   # highlight-end
+   ==152==
+   # highlight-start
+   ==152== LEAK SUMMARY:
+   ==152==    definitely lost: 100 bytes in 1 blocks
+   ==152==    indirectly lost: 0 bytes in 0 blocks
+   ==152==      possibly lost: 0 bytes in 0 blocks
+   ==152==    still reachable: 0 bytes in 0 blocks
+   ==152==         suppressed: 0 bytes in 0 blocks
+   # highlight-end
+   ==152==
+   ==152== Use --track-origins=yes to see where uninitialised values come from
+   ==152== For lists of detected and suppressed errors, rerun with: -s
+   # highlight-start
+   ==152== ERROR SUMMARY: 78 errors from 4 contexts (suppressed: 0 from 0)
+   # highlight-end
+   ```
+   
+   **Preguntas**:
+   1. ¿Cuantos errores son detectados?
+   2. ¿Que tipo de errores se muestran?
+
+## 5. Referencias
 
 * https://github.com/sisoputnfrba/so-commons-library
 * https://github.com/sisoputnfrba
 * https://github.com/sisoputnfrba/so-commons-library
-
----
-
+* https://github.com/dannymrock/UdeA-SO-Lab/tree/master/lab2/herramientas/valgrind
+* https://docs.utnso.com.ar/guias/herramientas/valgrind
 * https://www.u-cursos.cl/ingenieria/2007/2/CC31A/1/material_docente/bajar?id_material=140211
 * https://docs.utnso.com.ar/guias/herramientas/valgrind
 * https://pages.cs.wisc.edu/~remzi/OSTEP/Educators-Slides/Youjip/Part1.Virtualization/pdf/14.Memory_API.pdf
 * https://docs.utnso.com.ar/primeros-pasos/primer-proyecto-c
-
----
-
-* https://github.com/dannymrock/UdeA-SO-Lab/tree/master/lab2/herramientas/valgrind
 * https://pages.cs.wisc.edu/~remzi/OSTEP/Homework/homework.html
 * https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/
 * https://github.com/ossu/computer-science/blob/master/coursepages/ostep/README.md
@@ -782,9 +834,6 @@ Material de consulta: https://docs.utnso.com.ar/guias/herramientas/valgrind
 * https://www.cs.virginia.edu/~cr4bd/4414/S2020/
 * https://pages.cs.wisc.edu/~remzi/OSTEP/Educators-Slides/
 * https://ceunican.github.io/aos/
-
----
-
 * https://github.com/tigarto/memory-api
 * https://valgrind.org/docs/manual/manual.html
 * https://valgrind.org/docs/manual/valgrind_manual.pdf
@@ -801,3 +850,4 @@ Material de consulta: https://docs.utnso.com.ar/guias/herramientas/valgrind
 * https://www.cs.dartmouth.edu/~cs50/Lectures/debug/
 * https://www.usenix.org/legacy/publications/library/proceedings/usenix05/tech/general/full_papers/seward/seward_html/usenix2005.html
 * https://docs.redhat.com/es/documentation/red_hat_enterprise_linux/6/html/performance_tuning_guide/s-memory-valgrind#s-memory-valgrind
+* https://ranger.uta.edu/~alex/courses/3318/

@@ -14,9 +14,6 @@ Revise el contenido de apoyo descrito a continuación:
 2. [gdb Cheatsheet](/pdfs/gdb/gdb.pdf)
 3. [GDB Cheat Sheet](/pdfs/gdb/GDB-cheat-sheet.pdf)
 
-<!--
-Mas documentos pueden ser encontrados en el directorio [referencias](./referencias)
--->
 
 ### 1.2. Paso 2 
 
@@ -67,7 +64,7 @@ int factorial_recursivo(int num){
 }
 ```
 
-Usando el siguiente comando compilelo, si tiene errores corrijalo (para ver respuesta seguir el siguiente [enlace](main.c)):
+Usando el siguiente comando compilelo, si tiene errores corrijalo:
 
 ```
 gcc -Wall -g main.c -o main.out
@@ -220,6 +217,7 @@ La siguiente figura muestra el resultado:
 <figcaption>**Fig 6**. Salida con la información de los breakpoints al usar el comando `info breakpoints`.</figcaption>
 </figure>
 </p>
+
 
 Notese que cada breakpoint tiene información asociada a este pero resaltamos la primera columna en la cual se puede ver el numero del breakpoint. Conocer este numero es importante por que es el que se emplea para eliminar o desabilitar un breakpoint determinado. Para ello vamos a realizar las siguientes tareas:
 1. Agregar un breakpoint en la función ```factorial_recursivo```
