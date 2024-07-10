@@ -753,7 +753,7 @@ Cuando se esta realizando analisis de fugas de memoria, la recomendación es usa
 
    La salida resultante tiene la siguiente forma:
 
-   ```
+   ```sh
    ==152== Memcheck, a memory error detector
    ==152== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
    ==152== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
